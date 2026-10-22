@@ -76,7 +76,7 @@ elif page == "Hasil Evaluasi":
     st.title("Perbandingan Hasil Evaluasi")
     st.write("Seluruh model dilatih secara terpisah dengan pengaturan yang sama. Tidak ada cross-validation ataupun hyperparameter tuning.")
     st.dataframe(summary.style.format({k: "{:.2f}" for k in ["Accuracy (%)", "Precision macro (%)", "Recall macro (%)", "F1 macro (%)"]}), use_container_width=True, hide_index=True)
-    st.bar_chart(summary.set_index("Skenario")[["Accuracy (%)", "Precision macro (%)", "Recall macro (%)", "F1 macro (%)"]], y_label="Persentase (%)")
+    st.bar_chart(summary.set_index("Skenario")[["Accuracy (%)", "Precision macro (%)", "Recall macro (%)", "F1 macro (%)"]], y_label="Persentase (%)", stack=False)
     st.success("Dalam eksperimen ini, skenario 70:30 menghasilkan accuracy tertinggi: 94,44% (17 dari 18 sampel uji benar).")
     st.warning("Perbandingan menggunakan satu pembagian data per rasio. Hasil 70:30 bukan jaminan menjadi rasio terbaik pada data yang berbeda.")
     st.download_button("Unduh hasil evaluasi (CSV)", summary.to_csv(index=False).encode("utf-8"), "hasil_evaluasi_random_forest.csv", "text/csv")
