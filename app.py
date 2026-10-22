@@ -54,7 +54,6 @@ if page == "Beranda":
 2. Buka **Hasil Evaluasi** untuk membandingkan skenario 60:40, 70:30, dan 80:20.
 3. Lihat **Confusion Matrix & Fitur** untuk memahami kesalahan prediksi dan kepentingan mineral.
 4. Buka **Prediksi Asal Garam** untuk memasukkan delapan nilai mineral.""")
-    st.info("Aplikasi ini adalah demonstrasi penelitian pada dataset kecil, bukan alat penentuan asal produk yang telah divalidasi untuk kebutuhan industri atau laboratorium.")
 
 elif page == "Dataset":
     st.title("Dataset Garam")
@@ -77,8 +76,7 @@ elif page == "Hasil Evaluasi":
     st.write("Seluruh model dilatih secara terpisah dengan pengaturan yang sama. Tidak ada cross-validation ataupun hyperparameter tuning.")
     st.dataframe(summary.style.format({k: "{:.2f}" for k in ["Accuracy (%)", "Precision macro (%)", "Recall macro (%)", "F1 macro (%)"]}), use_container_width=True, hide_index=True)
     st.bar_chart(summary.set_index("Skenario")[["Accuracy (%)", "Precision macro (%)", "Recall macro (%)", "F1 macro (%)"]], y_label="Persentase (%)", stack=False)
-    st.success("Dalam eksperimen ini, skenario 70:30 menghasilkan accuracy tertinggi: 94,44% (17 dari 18 sampel uji benar).")
-    st.warning("Perbandingan menggunakan satu pembagian data per rasio. Hasil 70:30 bukan jaminan menjadi rasio terbaik pada data yang berbeda.")
+    st.write("Pada pengujian ini, skenario **70:30** memperoleh accuracy tertinggi, yaitu **94,44%** (17 dari 18 sampel uji benar).")
     st.download_button("Unduh hasil evaluasi (CSV)", summary.to_csv(index=False).encode("utf-8"), "hasil_evaluasi_random_forest.csv", "text/csv")
     st.subheader("Classification report skenario 70:30")
     report = classification_by_country(focus, labels)
@@ -106,7 +104,7 @@ elif page == "Confusion Matrix & Fitur":
 elif page == "Prediksi Asal Garam":
     st.title("Prediksi Asal Garam")
     st.write("Masukkan delapan hasil pengukuran mineral. Prediksi menggunakan **model skenario 70:30**, sesuai fokus pembahasan artikel penelitian.")
-    st.info("Nilai awal setiap kolom adalah median dataset hanya sebagai contoh. Ganti dengan hasil pengukuran mineral sampel yang ingin dicoba.")
+    st.caption("Angka yang terisi adalah contoh dari median data. Ubah sesuai hasil pengukuran sampel garam.")
     median = data[FEATURES].median()
     values = {}
     with st.form("mineral_form"):
@@ -120,13 +118,13 @@ elif page == "Prediksi Asal Garam":
         country, probabilities = predict_from_minerals(focus["model"], values)
         st.success(f"Prediksi model: **{country}**")
         st.dataframe(probabilities.style.format({"Proporsi suara/probabilitas model": "{:.2%}"}), hide_index=True, use_container_width=True)
-        st.warning("Probabilitas ini merupakan keluaran model pada data sangat terbatas dan belum dikalibrasi. Jangan menggunakannya sebagai sertifikat keaslian asal garam.")
+        st.caption("Hasil prediksi merupakan keluaran model penelitian, bukan bukti resmi asal produk.")
 
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi dan Sumber Data")
     st.markdown("""**Nama aplikasi:** Sistem Klasifikasi Asal Negara Garam Menggunakan Random Forest Berbasis Web.
 
-**Tujuan:** demonstrasi klasifikasi multikelas berdasarkan delapan mineral dengan tiga skenario stratified holdout.
+**Tujuan:** mengklasifikasikan asal garam berdasarkan delapan mineral dan membandingkan hasil pengujian pada tiga pembagian data.
 
 **Implementasi:** Python, Streamlit, pandas, scikit-learn, dan matplotlib.
 
@@ -134,4 +132,4 @@ elif page == "Tentang Aplikasi":
 
 **Sumber data:** Zanela Lima, L. R., et al. (2025). *Origin Identification of Table Salt Using Flame Atomic Absorption and Portable Near-Infrared Spectrometries*. **Chemosensors**, 13(7), 231. https://doi.org/10.3390/chemosensors13070231. Data mineral disusun berdasarkan Tabel S2 pada materi pendukung publikasi.
 
-**Catatan:** Pencatatan hak cipta mencakup karya perangkat lunak yang dibuat oleh penciptanya, bukan kepemilikan atas data penelitian pihak lain. Identitas pencipta dan pemegang hak harus ditentukan sesuai kontribusi serta ketentuan institusi. """)
+**Batasan:** Model dilatih dari 59 sampel penelitian. Prediksi pada sampel baru masih memerlukan pengujian lebih lanjut.""")
